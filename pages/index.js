@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import styles from "./index.module.css";
 
 export default function Home() {
-  const coiQuestions = "What kind of document is this? Be specific. Who is the insurance company? Display any insurance coverage types and amounts in a table format."
-  const penQuestions = "What kind of document is this? Be specific. Who is the auditor? What is the audit period? Is the audit period within the past year? What is the scope? List any findings from the report. If there are findings, are they being remediated? Display my results in a table."
-  const socQuestions = "What kind of document is this? Who is the auditor? Is the audit period within the past year? What is the scope? List which trust principles are covered in the report, if any. List any exceptions and findings from the report. If there are findings, are they being remediated? Display my results in a table."
+  // const coiQuestions = "What kind of document is this? Who is the producer? Who is the insured? List the insurer(s) affording coverage with their NAIC number. Display any insurance coverage types and limits in a table format."
+
+  // const penQuestions = "What kind of document is this? Be specific. Who is the auditor? What is the audit period? Is the audit period within the past year? What is the scope? List any findings from the report. If there are findings, are they being remediated? Display my results in a table."
+  // const socQuestions = "What kind of document is this? Who is the auditor? Is the audit period within the past year? What is the scope? List which trust principles are covered in the report, if any. List any exceptions and findings from the report. If there are findings, are they being remediated? Display my results in a table."
 
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState("");
@@ -33,6 +34,7 @@ export default function Home() {
      
       setResult(data.result);
       setLoading(false)
+      //calling makeCSV here causes some kind of race condition
       // makeCSV()
       setStatus(false)
     } catch(error) {
@@ -42,15 +44,17 @@ export default function Home() {
     }
   }
 
-  async function handleDocChange(event) {
-    event.preventDefault();
-    setQuestions(event.target.value)
-    console.log(questions)
-  }
+  // async function handleDocChange(event) {
+  //   event.preventDefault();
+  //   setQuestions(event.target.value)
+  //   console.log(questions)
+  // }
 
   async function makeCSV() {
     let text = result
-    let csvString = [text].join(",");
+    // the text comes through all smooshed together, some sort of string to csv parser needed,
+    // there's no consistency to the input
+    let csvString = [text]
     let a = document.createElement('a');
     a.href = 'data:attachment/csv,' + csvString;
     a.target = '_blank';
